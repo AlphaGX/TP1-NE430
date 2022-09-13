@@ -16,7 +16,8 @@ all: $(OBJECTS) link
 
 #Compile then run executable
 run: all
-	@./$(BinPATH)$(EXEC)
+	@clear
+	@./$(BinPATH)$(EXEC) minitest
 
 #Create folder for objects and binairy
 mkdir:
