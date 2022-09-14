@@ -76,7 +76,6 @@ int main (int argc,char *argv[])
  
 	initMyAlgo();  
 	if ((argc > 1 ) && (loadFile(argv[1]))) { 
-		lookupMyAlgo(0);
 		while (1) {
 			fgets(s,MAXLEN,stdin);
 			s[MAXLEN-1]=0; 

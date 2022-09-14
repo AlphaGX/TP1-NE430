@@ -7,7 +7,7 @@
 typedef struct node {
 	struct node* zero;
 	struct node* one;
-	uint32_t entry;	
+	uint32_t entry;
 } Noeud;
 
 
@@ -17,23 +17,26 @@ Noeud tree_root = {NULL,NULL,0};
 #define tc_clear_screen() puts("\x1B[2J")
 #define tc_move_cursor(X, Y) printf("\033[%d;%dH", Y, X)
 void print_tree(){
-	int x,y;
+	int x,y,yf;
 	void print_tree_aux(Noeud* n){
-		tc_move_cursor(x, y);
+		//printf("[%ld] 0:%ld | 1:%ld\n",n,n->zero,n->one);
 		if(n->zero) {
-			printf("0"); x++;
+			printf("0"); x++; yf=1;
 			print_tree_aux(n->zero);
 		}
 		if(n->one) {
-			printf("1"); x++;
+			printf("1"); x++; yf=1;
 			print_tree_aux(n->one);
 		}
-		y++; x--;
-		tc_move_cursor(70, y); puts("[");
+		if(yf) {
+			y++; yf=0;
+			tc_move_cursor(70, y); printf("[");
+		}
+		x--;
 		tc_move_cursor(x, y);
 	}
-	x=71; y=5;
-	tc_move_cursor(70, y); puts("[");
+	x=71; y=5; yf=1;
+	tc_move_cursor(70, y); printf("[");
 	//tc_clear_screen();
 	print_tree_aux(&tree_root);
 }
@@ -84,7 +87,12 @@ void insertMyAlgo(unsigned int addr,unsigned int netmask,unsigned int gw)
 				n->one=malloc(sizeof(Noeud));
 			n = n->one;
 		} else //	---- ---- - Case 0
-			n = n->zero ? n->zero : malloc(sizeof(Noeud));
+			/*{
+			if(!n->zero)
+				n->zero=malloc(sizeof(Noeud));
+			n = n->zero;
+			}*/
+			n = n->zero ? n->zero : (n->zero=malloc(sizeof(Noeud)));
 			
 		netmask<<=1;
 		addr<<=1;
@@ -112,15 +120,27 @@ unsigned int lookupMyAlgo(unsigned int addr)
 			suivant = noeud.one
 		i++
 	}
-	noeud.entry = gw
+	gw = p->gw
 */
 {
-	/* main temporaire */
+	Noeud* n;//ode
+	Noeud* b;//ackup
+	if(addr&0x80000000) n=tree_root.one;
+	else n=tree_root.zero;
+	while(n){
+		if (n->entry) b = n;
+		addr<<=1;
+		if(addr&0x80000000) n=n->one;
+		else n=n->zero;
+	}
+	return b->entry;
+	/* main temporaire 
 	printf("\nPrint\n");
 	print_tree();
 	printf("\nFree\n");
 	free_tree();
 	exit(0);
+	*/
 	
 }
 

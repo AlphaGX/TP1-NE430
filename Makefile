@@ -29,7 +29,7 @@ link:
 
 #Compile Sources into Objects
 %.o: %.c
-	$(CC) -o $(ObjPATH)$@ -c $< $(CompFLAGS)
+	$(CC) -o $(ObjPATH)$@ -c $< $(CC_FLAGS)
 
 
 archive:
