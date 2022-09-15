@@ -7,7 +7,7 @@
 typedef struct node {
 	struct node* zero;
 	struct node* one;
-	uint32_t entry;
+	unsigned int entry;
 } Noeud;
 
 
@@ -59,91 +59,35 @@ void free_tree(){
 
 /* InitMyAlgo */
 void initMyAlgo(){
-/* creer tree_root */
-return;
 }
 /* InsertMyAlgo */
 void insertMyAlgo(unsigned int addr,unsigned int netmask,unsigned int gw)
-/*
-	noeud = tree_root
-	Tant que (masque){
-		Lire premier bit
-		Si 0 , 
-			si nn noeud.zero , creer noeud.zero
-			noeud = noeud.zero
-		fin si
-		(same pour 1)
-		masque<<1
-	}
-	noeud.entry = gw
-*/
 {
 	Noeud* n = &tree_root;
-	printf("Hello\t");//mask:%uX\tgw:%uX\t",netmask,gw);
 	while(netmask){
-		printf("%d",(addr>>31)&1);
-		if(addr&0x80000000){ // Case 1
-			if(!n->one)
-				n->one=malloc(sizeof(Noeud));
-			n = n->one;
-		} else //	---- ---- - Case 0
-			/*{
-			if(!n->zero)
-				n->zero=malloc(sizeof(Noeud));
-			n = n->zero;
-			}*/
-			n = n->zero ? n->zero : (n->zero=malloc(sizeof(Noeud)));
+		if(addr&0x80000000) // Case 1
+			n = n->one ? n->one : (n->one=calloc(1,sizeof(Noeud)));
+		else //	---- ---- - Case 0
+			n = n->zero ? n->zero : (n->zero=calloc(1,sizeof(Noeud)));
 			
 		netmask<<=1;
 		addr<<=1;
 	}
-	printf("\tlast node %ld\n",n);
 	n->entry = gw;
 }
 /* lookupMyAlgo */
 unsigned int lookupMyAlgo(unsigned int addr)
-/*
-	noeud = tree_root
-	*p;
-	Lire premier bit i
-		Si 0 , 
-			suivant = noeud.zero
-		Si 1 , 
-			suivant = noeud.one
-	Tant que (suivant){
-		Si noeud.gw
-			Alors *p = noeud
-		Lire premier bit i
-		Si 0 , 
-			suivant = noeud.zero
-		Si 1 , 
-			suivant = noeud.one
-		i++
-	}
-	gw = p->gw
-*/
 {
 	Noeud* n;//ode
 	Noeud* b;//ackup
-	if(addr&0x80000000) n=tree_root.one;
-	else n=tree_root.zero;
+	b=n=&tree_root;
 	while(n){
 		if (n->entry) b = n;
-		addr<<=1;
 		if(addr&0x80000000) n=n->one;
 		else n=n->zero;
+		addr<<=1;
 	}
 	return b->entry;
-	/* main temporaire 
-	printf("\nPrint\n");
-	print_tree();
-	printf("\nFree\n");
-	free_tree();
-	exit(0);
-	*/
 	
 }
-
-
-
 
